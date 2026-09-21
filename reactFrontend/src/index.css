@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-canvas: #f4f5fa;
+  --color-ink: #0f172a;
+  --color-brand: #7c5cff;
+  --color-brand-2: #a855f7;
+}
+
+@layer base {
+  html {
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: #f4f5fa;
+    color: #0f172a;
+    font-feature-settings: "ss01" on, "cv11" on;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  .bm-card {
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+  }
+
+  .bm-input {
+    width: 100%;
+    border: 1px solid #e6e8ef;
+    background: #fff;
+    border-radius: 14px;
+    padding: 0.8rem 0.95rem 0.8rem 2.75rem;
+    font-size: 0.95rem;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .bm-input:focus {
+    border-color: #c4b5fd;
+    box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.12);
+  }
+
+  .bm-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .bm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 14px;
+    font-weight: 600;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  }
+
+  .bm-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .bm-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .bm-btn-primary {
+    background: linear-gradient(90deg, #7c5cff 0%, #a855f7 100%);
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(124, 92, 255, 0.28);
+  }
+
+  .bm-kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a78bfa;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4ea;
+  border-radius: 99px;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
