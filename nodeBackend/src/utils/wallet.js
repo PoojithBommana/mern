@@ -1,5 +1,5 @@
 import WalletTransaction from '../models/WalletTransaction.js';
-import Withdrawl from '../models/Withdrawl.js';
+import Withdrawl from '../models/withdrawl.js';
 
 export const createBookingPayoutTransaction = async ({ booking, description }) => {
   if (!booking?.providerPayoutAmount) return null;
