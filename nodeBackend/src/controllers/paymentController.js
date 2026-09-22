@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import userModelSchema from '../models/userModel.js';
 import WalletTransaction from '../models/WalletTransaction.js';
-import Withdrawl from '../models/Withdrawl.js';
+import Withdrawl from '../models/withdrawl.js';
 import { getWalletSummary } from '../utils/wallet.js';
 
 /**
