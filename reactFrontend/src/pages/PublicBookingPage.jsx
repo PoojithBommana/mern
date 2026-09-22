@@ -66,7 +66,9 @@ const PublicBookingPage = () => {
     notes: '',
   });
   const [otpVerified, setOtpVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
@@ -121,6 +123,7 @@ const PublicBookingPage = () => {
     setOtpVerified(false);
     try {
       await requestBookingOTP(slug, formData.customerEmail);
+      setOtpSent(true);
       setInfo(`We sent a 6-digit code to ${formData.customerEmail}`);
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to send code');
@@ -130,14 +133,25 @@ const PublicBookingPage = () => {
   };
 
   const handleVerifyOTP = async () => {
-    if (formData.otp.length !== 6) return;
+    if (!formData.customerEmail) {
+      setError('Enter your email first.');
+      return;
+    }
+    if (formData.otp.length !== 6) {
+      setError('Enter the 6-digit code from your email.');
+      return;
+    }
+    setOtpVerifying(true);
+    setError('');
     try {
       await verifyBookingOTP(slug, formData.customerEmail, formData.otp);
       setOtpVerified(true);
-      setError('');
+      setInfo('Email verified.');
     } catch (err) {
       setOtpVerified(false);
       setError(err.response?.data?.message || 'Invalid code');
+    } finally {
+      setOtpVerifying(false);
     }
   };
 
@@ -341,6 +355,7 @@ const PublicBookingPage = () => {
                   onChange={(e) => {
                     setFormData({ ...formData, customerEmail: e.target.value });
                     setOtpVerified(false);
+                    setOtpSent(false);
                   }}
                   placeholder="Enter your email"
                   className="bm-input !pl-4"
@@ -352,31 +367,42 @@ const PublicBookingPage = () => {
               <p className="mb-2 text-sm font-semibold" style={{ color: accent }}>
                 Email verification code
               </p>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <input
                   value={formData.otp}
                   onChange={(e) => {
                     setFormData({ ...formData, otp: e.target.value });
                     setOtpVerified(false);
                   }}
-                  onBlur={handleVerifyOTP}
                   maxLength={6}
                   placeholder="Enter 6-digit code"
-                  className="bm-input !pl-4 flex-1 bg-white"
+                  className="bm-input !pl-4 min-w-[10rem] flex-1 bg-white"
                 />
                 {otpVerified ? (
                   <span className="flex items-center rounded-xl bg-emerald-500 px-4 text-sm font-bold text-white">
                     Verified
                   </span>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={handleSendOTP}
-                    className="rounded-xl bg-white px-4 text-sm font-semibold"
-                    style={{ color: accent }}
-                  >
-                    {otpSending ? 'Sending…' : 'Resend code'}
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleSendOTP}
+                      disabled={otpSending}
+                      className="rounded-xl bg-white px-4 text-sm font-semibold disabled:opacity-50"
+                      style={{ color: accent }}
+                    >
+                      {otpSending ? 'Sending…' : otpSent ? 'Resend code' : 'Send code'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleVerifyOTP}
+                      disabled={otpVerifying}
+                      className="rounded-xl px-4 text-sm font-semibold text-white disabled:opacity-50"
+                      style={{ background: accent }}
+                    >
+                      {otpVerifying ? 'Verifying…' : 'Verify code'}
+                    </button>
+                  </>
                 )}
               </div>
             </div>
