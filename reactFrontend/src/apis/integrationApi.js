@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:5000';
+import { BASE_URL } from './api.js';
 
 // Create axios instance with auth token
 const api = axios.create({

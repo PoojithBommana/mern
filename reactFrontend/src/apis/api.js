@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000';
+export const BASE_URL = process.env.REACT_APP_API_URL;
 
 // Create axios instance with auth token
 const api = axios.create({
