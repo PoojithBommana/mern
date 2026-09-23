@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './components/DashboardLayout';
 import LoginPage from './pages/LoginPage';
@@ -19,7 +20,8 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
+        <ToastProvider>
+          <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -45,7 +47,8 @@ function App() {
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          </Routes>
+        </ToastProvider>
       </BrowserRouter>
     </AuthProvider>
   );

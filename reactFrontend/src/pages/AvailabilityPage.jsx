@@ -4,6 +4,7 @@ import { getAllAvailability, saveAvailability } from '../apis/availabilityApi';
 import Button from '../components/Button';
 import { Banner, SvgIcon } from '../components/ui';
 import { AvailabilityIllustration } from '../components/illustrations';
+import { useToast } from '../context/ToastContext';
 
 const days = [
   { id: 0, name: 'Sunday', icon: 'sun' },
@@ -26,6 +27,7 @@ const AvailabilityPage = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchAvailability();
@@ -75,6 +77,10 @@ const AvailabilityPage = () => {
     try {
       await saveAvailability({ dayOfWeek: selectedDay, slots: currentSlots });
       setMessage(`${days[selectedDay].name} hours saved.`);
+      toast('Availability saved. Go to Dashboard to share your public booking URL.', {
+        to: '/dashboard',
+        action: 'Open dashboard',
+      });
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to save availability');
     } finally {

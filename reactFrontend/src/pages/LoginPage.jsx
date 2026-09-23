@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import AuthShell from '../components/AuthShell';
 import Button from '../components/Button';
 import { Banner, Field } from '../components/ui';
+import { useToast } from '../context/ToastContext';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -11,6 +12,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +20,10 @@ const LoginPage = () => {
     setError('');
     try {
       await login(formData.email, formData.password);
+      toast('Logged in. Go to Services to create a service.', {
+        to: '/dashboard/services',
+        action: 'Create a service',
+      });
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Invalid email or password');

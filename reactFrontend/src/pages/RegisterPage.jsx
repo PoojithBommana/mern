@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import AuthShell from '../components/AuthShell';
 import Button from '../components/Button';
 import { Banner, Field } from '../components/ui';
+import { useToast } from '../context/ToastContext';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -15,17 +16,21 @@ const RegisterPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const { register, sendOTP } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
     setError('');
+    if (name === 'email') setOtpSent(false);
   };
 
-  const handleResendOTP = async () => {
+  const handleSendOTP = async () => {
     if (!formData.email) {
       setError('Enter your email first so we can send a code.');
       return;
@@ -34,7 +39,9 @@ const RegisterPage = () => {
     setError('');
     try {
       await sendOTP(formData.email);
+      setOtpSent(true);
       setInfo(`We sent a 6-digit code to ${formData.email}`);
+      toast(`Verification code sent to ${formData.email}`);
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to send code');
     } finally {
@@ -53,6 +60,10 @@ const RegisterPage = () => {
         password: formData.password,
         businessName: formData.businessName,
         emailOtp: formData.otp,
+      });
+      toast('Account created. Go to Services to create a service.', {
+        to: '/dashboard/services',
+        action: 'Create a service',
       });
       navigate('/dashboard');
     } catch (err) {
@@ -124,11 +135,11 @@ const RegisterPage = () => {
             />
             <button
               type="button"
-              onClick={handleResendOTP}
+              onClick={handleSendOTP}
               disabled={otpLoading}
               className="shrink-0 rounded-xl border border-violet-100 bg-white px-3 text-sm font-semibold text-violet-700 hover:bg-violet-50 disabled:opacity-50"
             >
-              {otpLoading ? 'Sending…' : 'Resend code'}
+              {otpLoading ? 'Sending…' : otpSent ? 'Resend OTP' : 'Send OTP'}
             </button>
           </div>
         </div>

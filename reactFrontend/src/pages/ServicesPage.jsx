@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import { Banner, EmptyState, Field, SvgIcon, TextArea } from '../components/ui';
 import { ServicesIllustration } from '../components/illustrations';
 import { formatRupees } from '../utils/format';
+import { useToast } from '../context/ToastContext';
 
 const parseMoneyInput = (value) => {
   if (value === '' || value === null || value === undefined) return '';
@@ -36,6 +37,7 @@ const ServicesPage = () => {
   const [editingService, setEditingService] = useState(null);
   const [error, setError] = useState('');
   const [addedServiceName, setAddedServiceName] = useState('');
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     duration: 30,
@@ -80,6 +82,10 @@ const ServicesPage = () => {
       } else {
         await createService(payload);
         setAddedServiceName(payload.name);
+        toast('Service created. Go to Availability to set your hours.', {
+          to: '/dashboard/availability',
+          action: 'Set availability',
+        });
       }
       await fetchServices();
       resetForm();
